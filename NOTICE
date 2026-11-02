@@ -1,0 +1,19 @@
+Third-party components (not redistributed in this repository)
+=============================================================
+
+This lab is original demo code. At runtime it may download or call:
+
+- Laya (Convai Innovations) — Apache License 2.0
+  https://huggingface.co/convaiinnovations/laya
+  https://pypi.org/project/laya/
+
+- typesafe-sdk — used as a client library via pip
+  https://pypi.org/project/typesafe-sdk/
+
+- Hosted Jev / TypeSafe AI — closed-weight commercial API (optional backend)
+  https://typesafe.ai
+
+Jev, TypeSafe, and related marks belong to their owners. This project is an
+independent learning lab that speaks the public System One wire shape
+(POST /v1/systemone). It is not affiliated with, endorsed by, or a product of
+TypeSafe AI.

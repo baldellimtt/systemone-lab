@@ -1,0 +1,23 @@
+[
+  {
+    "id": "weather-ok",
+    "question": "What's the weather in Milan tomorrow?",
+    "tools": ["search_weather(city=Milan, day=tomorrow)"],
+    "evidence": "Milan tomorrow: 18°C, light rain in the afternoon.",
+    "answer": "Tomorrow in Milan expect about 18°C with light afternoon rain."
+  },
+  {
+    "id": "weather-hallucination",
+    "question": "What's the weather in Milan tomorrow?",
+    "tools": ["search_weather(city=Milan, day=tomorrow)"],
+    "evidence": "Milan tomorrow: 18°C, light rain in the afternoon.",
+    "answer": "Milan will be sunny and 28°C all day — perfect beach weather."
+  },
+  {
+    "id": "no-search",
+    "question": "What's the weather in Milan tomorrow?",
+    "tools": [],
+    "evidence": "",
+    "answer": "It will probably be nice, maybe around 20 degrees."
+  }
+]

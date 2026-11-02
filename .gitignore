@@ -1,0 +1,39 @@
+# Virtualenvs / local installs
+.venv/
+.venv-laya/
+.venv-*/
+venv/
+
+# Secrets & local env
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Model / HF caches (if ever stored under the repo)
+.cache/
+models/
+*.safetensors
+*.bin
+*.gguf

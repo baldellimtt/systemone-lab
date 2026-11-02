@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jev lab — playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg0: #0f1412;
+      --bg1: #1a2420;
+      --ink: #e8efe9;
+      --muted: #9aafa3;
+      --line: #2c3b34;
+      --accent: #c4f061;
+      --accent-ink: #152016;
+      --warn: #f0b45a;
+      --panel: rgba(26, 36, 32, 0.88);
+      --radius: 14px;
+      --font: "IBM Plex Sans", system-ui, sans-serif;
+      --display: "Fraunces", Georgia, serif;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font: 15px/1.45 var(--font);
+      background:
+        radial-gradient(900px 500px at 10% -10%, #24352c 0%, transparent 55%),
+        radial-gradient(700px 400px at 100% 0%, #2a2218 0%, transparent 50%),
+        linear-gradient(165deg, var(--bg0), var(--bg1));
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .brand {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .brand span { color: var(--accent); }
+    .sub {
+      color: var(--muted);
+      max-width: 36rem;
+      margin: 0.35rem 0 0;
+    }
+    .status {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+    }
+    .status.ok { color: var(--accent); border-color: #3d5a2e; }
+    .status.bad { color: var(--warn); border-color: #5a4020; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1rem;
+    }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem 1.15rem;
+      backdrop-filter: blur(8px);
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    textarea, input, select {
+      width: 100%;
+      background: #121916;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.7rem 0.8rem;
+      font: 14px/1.4 var(--font);
+    }
+    textarea { min-height: 120px; resize: vertical; font-family: var(--mono); }
+    textarea:focus, input:focus, select:focus {
+      outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+      border-color: #4a6b38;
+    }
+    .row { margin-bottom: 0.9rem; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.85rem;
+    }
+    button {
+      font: 600 14px var(--font);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.65rem 1.05rem;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    button.ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button:disabled { opacity: 0.5; cursor: wait; }
+    .q {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-bottom: 0.65rem;
+      background: #141c18;
+    }
+    .q-head {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 0.45rem;
+      margin-bottom: 0.5rem;
+    }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0.25rem 0 0.6rem;
+    }
+    .out {
+      font-family: var(--mono);
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 220px;
+      margin: 0;
+    }
+    .answer {
+      border-top: 1px solid var(--line);
+      padding: 0.75rem 0 0.2rem;
+      margin-top: 0.55rem;
+    }
+    .answer:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+    .answer h3 {
+      margin: 0 0 0.35rem;
+      font: 600 14px var(--font);
+    }
+    .bar {
+      display: flex;
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+      background: #0c110e;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .bar i { display: block; height: 100%; }
+    .meta { color: var(--muted); font-size: 12px; }
+    .err {
+      color: var(--warn);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1 class="brand">Jev <span>lab</span></h1>
+        <p class="sub">State + domande tipizzate → probabilità. Backend: Laya locale su <code>/v1/systemone</code>.</p>
+      </div>
+      <div id="status" class="status">checking…</div>
+    </header>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="row">
+          <label for="state">State</label>
+          <textarea id="state">I was charged twice for the same invoice. Please refund the duplicate charge today — we cannot close the books.</textarea>
+          <p class="hint">Il contesto che il modello “vede”. Stringa o JSON oggetto.</p>
+        </div>
+
+        <label>Questions</label>
+        <p class="hint">Noul = sì/no · Choice = una label · Score = scala ordinata</p>
+        <div id="questions"></div>
+
+        <div class="actions">
+          <button type="button" class="ghost" id="add">+ domanda</button>
+          <button type="button" class="ghost" id="preset">preset ticket</button>
+          <button type="button" class="primary" id="run">Esegui</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label>Risposta</label>
+        <div id="result" class="out meta">Premi Esegui.</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const questionsEl = $("questions");
+    const resultEl = $("result");
+    const statusEl = $("status");
+
+    const COLORS = ["#c4f061", "#7ec8ff", "#f0b45a", "#e8899a", "#b7a6ff", "#8fd6b5"];
+
+    function qTemplate(data = {}) {
+      const el = document.createElement("div");
+      el.className = "q";
+      el.innerHTML = `
+        <div class="q-head">
+          <select class="type">
+            <option value="noul">noul</option>
+            <option value="choice">choice</option>
+            <option value="score">score</option>
+          </select>
+          <input class="id" placeholder="id (es. is_billing)" />
+          <button type="button" class="ghost rm" title="rimuovi">×</button>
+        </div>
+        <input class="instr" placeholder="instructions" />
+        <input class="crit" placeholder='criteria: choice → a:desc,b:desc · score → low, mid, high' style="margin-top:0.45rem" />
+      `;
+      el.querySelector(".type").value = data.type || "noul";
+      el.querySelector(".id").value = data.id || "";
+      el.querySelector(".instr").value = data.instructions || "";
+      el.querySelector(".crit").value = data.criteria || "";
+      el.querySelector(".rm").onclick = () => el.remove();
+      el.querySelector(".type").onchange = () => syncCritPlaceholder(el);
+      syncCritPlaceholder(el);
+      questionsEl.appendChild(el);
+    }
+
+    function syncCritPlaceholder(el) {
+      const t = el.querySelector(".type").value;
+      const crit = el.querySelector(".crit");
+      crit.style.display = t === "noul" ? "none" : "block";
+      crit.placeholder = t === "choice"
+        ? "criteria: calm:matter-of-fact, frustrated:annoyed, angry:hostile"
+        : "criteria ordinati: can wait, this week, today / ASAP";
+    }
+
+    function parseCriteria(type, raw) {
+      const s = (raw || "").trim();
+      if (type === "noul") return undefined;
+      if (type === "score") {
+        return s.split(",").map((x) => x.trim()).filter(Boolean);
+      }
+      // choice: key:desc, key:desc  OR key,key
+      const out = {};
+      s.split(",").map((x) => x.trim()).filter(Boolean).forEach((part) => {
+        const i = part.indexOf(":");
+        if (i === -1) out[part] = null;
+        else out[part.slice(0, i).trim()] = part.slice(i + 1).trim() || null;
+      });
+      return out;
+    }
+
+    function buildBody() {
+      const stateRaw = $("state").value.trim();
+      let state;
+      try { state = JSON.parse(stateRaw); }
+      catch { state = stateRaw; }
+
+      const questions = {};
+      [...questionsEl.children].forEach((el) => {
+        const id = el.querySelector(".id").value.trim();
+        const type = el.querySelector(".type").value;
+        const instructions = el.querySelector(".instr").value.trim();
+        if (!id || !instructions) throw new Error("Ogni domanda serve id + instructions");
+        const q = { type, instructions };
+        const criteria = parseCriteria(type, el.querySelector(".crit").value);
+        if (type !== "noul") {
+          if (!criteria || (Array.isArray(criteria) ? !criteria.length : !Object.keys(criteria).length)) {
+            throw new Error(`La domanda "${id}" (${type}) richiede criteria`);
+          }
+          q.criteria = criteria;
+        }
+        questions[id] = q;
+      });
+      if (!Object.keys(questions).length) throw new Error("Aggiungi almeno una domanda");
+      // Niente model fisso: il router Laya sceglie english vs multilingual dal testo.
+      return { state, questions };
+    }
+
+    function renderAnswers(data) {
+      const answers = data.answers || {};
+      const keys = Object.keys(answers);
+      if (!keys.length) {
+        resultEl.textContent = JSON.stringify(data, null, 2);
+        return;
+      }
+      resultEl.innerHTML = "";
+      const model = document.createElement("div");
+      model.className = "meta";
+      model.textContent = `model: ${data.model || "?"} · ${keys.length} answer(s)`;
+      resultEl.appendChild(model);
+
+      keys.forEach((id) => {
+        const a = answers[id];
+        const box = document.createElement("div");
+        box.className = "answer";
+        let title = id;
+        let body = "";
+        let probs = null;
+
+        if (a.type === "noul" || "noul" in a) {
+          title = `[noul] ${id}`;
+          const p = Number(a.noul);
+          body = `P(yes) = ${p.toFixed(3)}`;
+          probs = { yes: p, no: 1 - p };
+        } else if (a.type === "choice" || "choice" in a) {
+          title = `[choice] ${id}`;
+          body = `→ ${a.choice}` + (a.confidence != null ? ` · conf ${Number(a.confidence).toFixed(2)}` : "");
+          probs = a.probabilities || null;
+        } else if (a.type === "score" || "score" in a) {
+          title = `[score] ${id}`;
+          body = `score = ${Number(a.score).toFixed(2)}` + (a.confidence != null ? ` · conf ${Number(a.confidence).toFixed(2)}` : "");
+          probs = a.probabilities || null;
+        } else {
+          body = JSON.stringify(a, null, 2);
+        }
+
+        box.innerHTML = `<h3>${title}</h3><div>${body}</div>`;
+        if (probs) {
+          const entries = Object.entries(probs).sort((x, y) => y[1] - x[1]);
+          const bar = document.createElement("div");
+          bar.className = "bar";
+          entries.forEach(([k, v], i) => {
+            const slice = document.createElement("i");
+            slice.style.width = `${Math.max(0, v) * 100}%`;
+            slice.style.background = COLORS[i % COLORS.length];
+            slice.title = `${k}: ${Number(v).toFixed(3)}`;
+            bar.appendChild(slice);
+          });
+          box.appendChild(bar);
+          const legend = document.createElement("div");
+          legend.className = "meta";
+          legend.textContent = entries.map(([k, v]) => `${k}=${Number(v).toFixed(2)}`).join("  ");
+          box.appendChild(legend);
+        }
+        resultEl.appendChild(box);
+      });
+    }
+
+    async function checkHealth() {
+      try {
+        const r = await fetch("/api/health");
+        const j = await r.json();
+        statusEl.textContent = `laya ${j.device || "?"} · ${(j.loaded || []).join(",") || "ok"}`;
+        statusEl.className = "status ok";
+      } catch {
+        statusEl.textContent = "laya offline — avvia start_laya.ps1";
+        statusEl.className = "status bad";
+      }
+    }
+
+    $("add").onclick = () => qTemplate({ type: "noul", id: "", instructions: "" });
+    $("preset").onclick = () => {
+      $("state").value = "I was charged twice for the same invoice. Please refund the duplicate charge today — we cannot close the books.";
+      questionsEl.innerHTML = "";
+      qTemplate({ type: "noul", id: "is_billing", instructions: "Is this ticket about billing or payments?" });
+      qTemplate({
+        type: "choice", id: "tone",
+        instructions: "What is the customer's tone?",
+        criteria: "calm:Matter-of-fact, frustrated:Annoyed but civil, angry:Hostile",
+      });
+      qTemplate({
+        type: "score", id: "urgency",
+        instructions: "How urgent is a reply?",
+        criteria: "can wait, this week, today / ASAP",
+      });
+    };
+    $("run").onclick = async () => {
+      const btn = $("run");
+      btn.disabled = true;
+      resultEl.textContent = "…";
+      try {
+        const body = buildBody();
+        const r = await fetch("/api/systemone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const text = await r.text();
+        let data;
+        try { data = JSON.parse(text); } catch { throw new Error(text || r.statusText); }
+        if (!r.ok) throw new Error(typeof data === "object" ? JSON.stringify(data, null, 2) : data);
+        renderAnswers(data);
+      } catch (e) {
+        resultEl.innerHTML = `<div class="err">${String(e.message || e)}</div>`;
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    $("preset").click();
+    checkHealth();
+  </script>
+</body>
+</html>

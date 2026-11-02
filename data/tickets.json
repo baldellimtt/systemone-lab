@@ -1,0 +1,14 @@
+[
+  {
+    "subject": "Double charge",
+    "body": "I was billed twice for invoice #4412. Please refund the duplicate ASAP."
+  },
+  {
+    "subject": "API 500s",
+    "body": "Our production checkout started returning 500 on /v1/pay about 15 minutes ago. Orders are stuck."
+  },
+  {
+    "subject": "Upgrade pricing",
+    "body": "We're evaluating Pro vs Enterprise. Can someone walk us through seat pricing for 80 users?"
+  }
+]
